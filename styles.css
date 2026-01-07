@@ -42,8 +42,9 @@ body {
 button {
   padding: 10px 20px;
   font-size: 1rem;
-  margin-top: 10px;
+  margin: 10px;
   cursor: pointer;
+  border-radius: 20px;
 }
 
 #result {
