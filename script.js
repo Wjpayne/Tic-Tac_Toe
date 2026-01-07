@@ -107,12 +107,20 @@ const DisplayController = (() => {
     }
   };
 
-  const render = () => {
-    const board = Gameboard.getBoard();
-    cells.forEach((cell, i) => {
-      cell.textContent = board[i];
-    });
-  };
+const render = () => {
+  const board = Gameboard.getBoard();
+  cells.forEach((cell, i) => {
+    const marker = board[i];
+    cell.textContent = marker;
+
+    // Remove previous classes
+    cell.classList.remove("x", "o");
+
+    // Add class based on marker
+    if (marker === "X") cell.classList.add("x");
+    if (marker === "O") cell.classList.add("o");
+  });
+};
 
   const updateResult = (message) => {
     resultDiv.textContent = message;
