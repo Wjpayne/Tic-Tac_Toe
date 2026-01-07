@@ -50,7 +50,6 @@ const Game = (() => {
   const getCurrentPlayer = () => players[currentPlayerIndex];
 
   const playTurn = (index) => {
-    // Prevent moves if game not started or over
     if (gameOver || players.length === 0) return;
 
     const marker = getCurrentPlayer().getMarker();
@@ -97,7 +96,16 @@ const DisplayController = (() => {
   const player1Input = document.getElementById("player1");
   const player2Input = document.getElementById("player2");
 
-  let boardActive = false; // Only allow clicks when true
+  let boardActive = false;
+
+  // Enable Start button only when both player names are filled
+  const checkInputs = () => {
+    if (player1Input.value.trim() && player2Input.value.trim()) {
+      startBtn.disabled = false;
+    } else {
+      startBtn.disabled = true;
+    }
+  };
 
   const render = () => {
     const board = Gameboard.getBoard();
@@ -111,26 +119,31 @@ const DisplayController = (() => {
   };
 
   const bindEvents = () => {
-    // Board click events
+    // Listen for input changes
+    player1Input.addEventListener("input", checkInputs);
+    player2Input.addEventListener("input", checkInputs);
+
+    // Board clicks
     cells.forEach((cell, i) => {
       cell.addEventListener("click", () => {
-        if (!boardActive) return; // ignore clicks before start
+        if (!boardActive) return;
         Game.playTurn(i);
       });
     });
 
     // Start button
     startBtn.addEventListener("click", () => {
-      const p1 = player1Input.value || "Player 1";
-      const p2 = player2Input.value || "Player 2";
+      const p1 = player1Input.value.trim();
+      const p2 = player2Input.value.trim();
       Game.start(p1, p2);
       boardActive = true;
     });
 
     // Restart button
     restartBtn.addEventListener("click", () => {
-      const p1 = player1Input.value || "Player 1";
-      const p2 = player2Input.value || "Player 2";
+      const p1 = player1Input.value.trim();
+      const p2 = player2Input.value.trim();
+      if (!p1 || !p2) return; // Prevent restart without names
       Game.start(p1, p2);
       boardActive = true;
     });
